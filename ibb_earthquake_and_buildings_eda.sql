@@ -113,13 +113,13 @@ ON d.mahalle_koy_uavt = b.mahalle_uavt
 SELECT ilce_adi,mahalle_adi,ToplamHasarliBina,ToplamBina,
 (ToplamHasarliBina*1.0 / ToplamBina)*100 AS HasarliBinaOrani
 FROM BinaOranlari
-ORDER BY HasarliBinaOrani DESC  --Olası deprem senaryosunda en çok (hasarlı bina/toplam bina) oranına sahip olacak
-								--ilçe ve mahalleler ilk beş:
-								-- BAKIRKÖY - YEŞİLYURT			%83 oranda hasarlı bina
-								-- BAKIRKÖY - SAKIZAĞACI		%82 oranda hasarlı bina
-								-- FATİH - YEDİKULE			%82 oranda hasarlı bina
-								-- BAKIRKÖY - YENİMAHALLE		%81 oranda hasarlı bina
-								-- BAKIRKÖY - ATAKÖY 3-4-11. KISIM	%81 oranda hasarlı bina
+ORDER BY HasarliBinaOrani DESC  	--Olası deprem senaryosunda en çok (hasarlı bina/toplam bina) oranına sahip olacak
+					--ilçe ve mahalleler ilk beş:
+					-- BAKIRKÖY - YEŞİLYURT			%83 oranda hasarlı bina
+					-- BAKIRKÖY - SAKIZAĞACI		%82 oranda hasarlı bina
+					-- FATİH - YEDİKULE			%82 oranda hasarlı bina
+					-- BAKIRKÖY - YENİMAHALLE		%81 oranda hasarlı bina
+					-- BAKIRKÖY - ATAKÖY 3-4-11. KISIM	%81 oranda hasarlı bina
 
 
 
