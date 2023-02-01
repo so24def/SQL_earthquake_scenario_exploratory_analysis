@@ -1,4 +1,4 @@
---Genel bakış
+--Genel bakÄ±ÅŸ
 SELECT * 
 FROM ibb.dbo.deprem
 SELECT * 
@@ -6,9 +6,9 @@ FROM ibb.dbo.bina
 
 
 
---Join işlemi
--- iki tabloda da id kolonunu primary key seçerek import etmiştim
--- mahalle_koy_uavt ve mahalle_uavt kolonları ise ilçelerin ulusal adreslerini içeriyor ve
+--Join iÅŸlemi
+-- iki tabloda da id kolonunu primary key seÃ§erek import etmiÅŸtim
+-- mahalle_koy_uavt ve mahalle_uavt kolonlarÄ± ise ilÃ§elerin ulusal adreslerini iÃ§eriyor ve
 -- iki tabloda da ortak
 SELECT * 
 FROM ibb.dbo.deprem d
@@ -17,7 +17,7 @@ ON d.mahalle_koy_uavt = b.mahalle_uavt
 
 
 
---Tek değişkenli inceleme
+--Tek deÄŸiÅŸkenli inceleme
 SELECT *
 FROM ibb.dbo.deprem d
 LEFT JOIN ibb.dbo.bina b 
@@ -30,74 +30,75 @@ ORDER BY can_kaybi_sayisi DESC
 
 
 
--- Hiç can kaybı olmayan bölgeler? İlçe-mahalle bazında
+-- HiÃ§ can kaybÄ± olmayan bÃ¶lgeler? Ä°lÃ§e-mahalle bazÄ±nda
 SELECT d.ilce_adi,d.mahalle_adi,d.can_kaybi_sayisi
 FROM ibb.dbo.deprem d
 LEFT JOIN ibb.dbo.bina b
 ON d.mahalle_koy_uavt = b.mahalle_uavt
 WHERE can_kaybi_sayisi = 0
 
--- Hiç bir mahallesinde bile can kaybı olmayan, tamamında can kaybı yaşanmayan ilçeler?
+-- HiÃ§ bir mahallesinde bile can kaybÄ± olmayan, tamamÄ±nda can kaybÄ± yaÅŸanmayan ilÃ§eler?
 
-SELECT d.ilce_adi,SUM(d.can_kaybi_sayisi) AS İlceTopCanKaybi
+SELECT d.ilce_adi,SUM(d.can_kaybi_sayisi) AS Ä°lceTopCanKaybi
 FROM ibb.dbo.deprem d
 LEFT JOIN ibb.dbo.bina b
 ON d.mahalle_koy_uavt = b.mahalle_uavt
 GROUP BY d.ilce_adi
-HAVING SUM(d.can_kaybi_sayisi) = 0		---- ARNAVUTKÖY VE ŞİLE ilçelerinin HİÇ BİR mahallesinde can kaybı
-										--  yaşanmamış, bu kriter bakımından en güvenli ilçeler olduğu söylenebilir.
+HAVING SUM(d.can_kaybi_sayisi) = 0						---- ARNAVUTKÃ–Y VE ÅÄ°LE ilÃ§elerinin HÄ°Ã‡ BÄ°R mahallesinde can kaybÄ±
+										--  yaÅŸanmamÄ±ÅŸ, bu kriter bakÄ±mÄ±ndan en gÃ¼venli ilÃ§eler olduÄŸu sÃ¶ylenebilir.
 
 
 
 
 
 
---Tek değişkenli inceleme, ilçe bazında gruplu
+--Tek deÄŸiÅŸkenli inceleme, ilÃ§e bazÄ±nda gruplu
 SELECT d.ilce_adi, 
-SUM(cok_agir_hasarli_bina_sayisi) AS İlceTopCokAgirHasar,
-SUM(agir_hasarli_bina_sayisi) AS İlceTopAgirHasar,
-SUM(orta_hasarli_bina_sayisi) AS İlceTopOrtaHasar,
-SUM(hafif_hasarli_bina_sayisi) AS İlceTopHafifHasar,
-SUM(can_kaybi_sayisi) AS İlceTopCanKaybi,
-SUM(gecici_barinma) AS İlceTopSiginak
+SUM(cok_agir_hasarli_bina_sayisi) AS Ä°lceTopCokAgirHasar,
+SUM(agir_hasarli_bina_sayisi) AS Ä°lceTopAgirHasar,
+SUM(orta_hasarli_bina_sayisi) AS Ä°lceTopOrtaHasar,
+SUM(hafif_hasarli_bina_sayisi) AS Ä°lceTopHafifHasar,
+SUM(can_kaybi_sayisi) AS Ä°lceTopCanKaybi,
+SUM(gecici_barinma) AS Ä°lceTopSiginak
 FROM ibb.dbo.deprem d
 LEFT JOIN ibb.dbo.bina b 
 ON d.mahalle_koy_uavt = b.mahalle_uavt
 GROUP BY d.ilce_adi
---ORDER BY İlceTopCokAgirHasar DESC -- FATİH, KÜÇÜKÇEKMECE, BAĞCILAR, BAHÇELİEVLER, BAKIRKÖY...
---ORDER BY İlceTopAgirHasar DESC -- FATİH, KÜÇÜKÇEKMECE, BAĞCILAR, ESENYURT, SİLİVRİ...
---ORDER BY İlceTopOrtaHasar DESC -- FATİH, KÜÇÜKÇEKMECE, BAĞCILAR, ESENYURT, SİLİVRİ...
---ORDER BY İlceTopHafifHasar DESC -- FATİH, BAĞCILAR, ESENYURT, KÜÇÜKÇEKMECE, PENDİK...
---ORDER BY İlceTopCanKaybi DESC -- BAHÇELİEVLER, KÜÇÜKÇEKMECE, FATİH, BAĞCILAR, BAKIRKÖY...
-ORDER BY İlceTopSiginak DESC -- KÜÇÜKÇEKMECE, ESENYURT, BAHÇELİEVLER, BAĞCILAR, FATİH...
+--ORDER BY Ä°lceTopCokAgirHasar DESC 		-- FATÄ°H, KÃœÃ‡ÃœKÃ‡EKMECE, BAÄCILAR, BAHÃ‡ELÄ°EVLER, BAKIRKÃ–Y...
+--ORDER BY Ä°lceTopAgirHasar DESC 		-- FATÄ°H, KÃœÃ‡ÃœKÃ‡EKMECE, BAÄCILAR, ESENYURT, SÄ°LÄ°VRÄ°...
+--ORDER BY Ä°lceTopOrtaHasar DESC 		-- FATÄ°H, KÃœÃ‡ÃœKÃ‡EKMECE, BAÄCILAR, ESENYURT, SÄ°LÄ°VRÄ°...
+--ORDER BY Ä°lceTopHafifHasar DESC 		-- FATÄ°H, BAÄCILAR, ESENYURT, KÃœÃ‡ÃœKÃ‡EKMECE, PENDÄ°K...
+--ORDER BY Ä°lceTopCanKaybi DESC 		-- BAHÃ‡ELÄ°EVLER, KÃœÃ‡ÃœKÃ‡EKMECE, FATÄ°H, BAÄCILAR, BAKIRKÃ–Y...
+ORDER BY Ä°lceTopSiginak DESC 			-- KÃœÃ‡ÃœKÃ‡EKMECE, ESENYURT, BAHÃ‡ELÄ°EVLER, BAÄCILAR, FATÄ°H...
 								
-								-- Olası deprem senaryosunda en çok can kaybı yaşayacak ve hasar alacak bölgelerin
-								-- FATİH, KÜÇÜKÇEKMECE, BAĞCILAR, BAHÇELİEVLER olacağı söylenebilir.
+								
+								-- OlasÄ± deprem senaryosunda en Ã§ok can kaybÄ± yaÅŸayacak ve hasar alacak bÃ¶lgelerin
+								-- FATÄ°H, KÃœÃ‡ÃœKÃ‡EKMECE, BAÄCILAR, BAHÃ‡ELÄ°EVLER olacaÄŸÄ± sÃ¶ylenebilir.
 
 
---------------------	İki değişkenli inceleme
+--------------------	Ä°ki deÄŸiÅŸkenli inceleme
 
-------İlçe ve mahalle bazında; toplamda ne kadar bina hasar görmüş?
+------Ä°lÃ§e ve mahalle bazÄ±nda; toplamda ne kadar bina hasar gÃ¶rmÃ¼ÅŸ?
 SELECT d.ilce_adi,d.mahalle_adi, 
 (cok_agir_hasarli_bina_sayisi+agir_hasarli_bina_sayisi+orta_hasarli_bina_sayisi+hafif_hasarli_bina_sayisi)
 as ToplamHasarliBina
 FROM ibb.dbo.deprem d
 LEFT JOIN ibb.dbo.bina b 
 ON d.mahalle_koy_uavt = b.mahalle_uavt
-ORDER BY ToplamHasarliBina DESC --Olası deprem senaryosunda en çok hasar alacak binaya sahip ilçe ve mahalleler ilk beş:
-								-- AVCILAR - YEŞİLKENT
-								-- KÜÇÜKÇEKMECE - İNÖNÜ
-								-- BAHÇELİEVLER - ZAFER
-								-- SİLİVRİ - SEMİZKUMLAR
+ORDER BY ToplamHasarliBina DESC 		--OlasÄ± deprem senaryosunda en Ã§ok hasar alacak binaya sahip ilÃ§e ve mahalleler ilk beÅŸ:
+								-- AVCILAR - YEÅÄ°LKENT
+								-- KÃœÃ‡ÃœKÃ‡EKMECE - Ä°NÃ–NÃœ
+								-- BAHÃ‡ELÄ°EVLER - ZAFER
+								-- SÄ°LÄ°VRÄ° - SEMÄ°ZKUMLAR
 								-- TUZLA - AYDINLI
 
 
 
 
 --
---Toplam bina sayıları ve toplam hasarlı bina sayılarını karşılaştırmadan önce CTE oluşturacağım
---İlçe ve mahalle bazında;
---1) Toplam binaların yüzde kaçı hasarlı? 
+--Toplam bina sayÄ±larÄ± ve toplam hasarlÄ± bina sayÄ±larÄ±nÄ± karÅŸÄ±laÅŸtÄ±rmadan Ã¶nce CTE oluÅŸturacaÄŸÄ±m
+--Ä°lÃ§e ve mahalle bazÄ±nda;
+--1) Toplam binalarÄ±n yÃ¼zde kaÃ§Ä± hasarlÄ±? 
 --CTE;
 WITH BinaOranlari (ilce_adi,mahalle_adi,ToplamHasarliBina,ToplamBina)
 AS
@@ -112,18 +113,18 @@ ON d.mahalle_koy_uavt = b.mahalle_uavt
 SELECT ilce_adi,mahalle_adi,ToplamHasarliBina,ToplamBina,
 (ToplamHasarliBina*1.0 / ToplamBina)*100 AS HasarliBinaOrani
 FROM BinaOranlari
-ORDER BY HasarliBinaOrani DESC  --Olası deprem senaryosunda en çok (hasarlı bina/toplam bina) oranına sahip olacak
-								--ilçe ve mahalleler ilk beş:
-								-- BAKIRKÖY - YEŞİLYURT				%83 oranda hasarlı bina
-								-- BAKIRKÖY - SAKIZAĞACI			%82 oranda hasarlı bina
-								-- FATİH - YEDİKULE					%82 oranda hasarlı bina
-								-- BAKIRKÖY - YENİMAHALLE			%81 oranda hasarlı bina
-								-- BAKIRKÖY - ATAKÖY 3-4-11. KISIM	%81 oranda hasarlı bina
+ORDER BY HasarliBinaOrani DESC  --OlasÄ± deprem senaryosunda en Ã§ok (hasarlÄ± bina/toplam bina) oranÄ±na sahip olacak
+								--ilÃ§e ve mahalleler ilk beÅŸ:
+								-- BAKIRKÃ–Y - YEÅÄ°LYURT			%83 oranda hasarlÄ± bina
+								-- BAKIRKÃ–Y - SAKIZAÄACI		%82 oranda hasarlÄ± bina
+								-- FATÄ°H - YEDÄ°KULE			%82 oranda hasarlÄ± bina
+								-- BAKIRKÃ–Y - YENÄ°MAHALLE		%81 oranda hasarlÄ± bina
+								-- BAKIRKÃ–Y - ATAKÃ–Y 3-4-11. KISIM	%81 oranda hasarlÄ± bina
 
 
 
 
---2) Aynı oranları ilçe bazında gruplama
+--2) AynÄ± oranlarÄ± ilÃ§e bazÄ±nda gruplama
 --CTE;
 WITH BinaOranlari (ilce_adi,mahalle_adi,ToplamHasarliBina,ToplamBina,HasarliBinaOrani)
 AS
@@ -138,24 +139,25 @@ FROM ibb.dbo.deprem d
 LEFT JOIN ibb.dbo.bina b 
 ON d.mahalle_koy_uavt = b.mahalle_uavt
 )
-SELECT ilce_adi,SUM(ToplamHasarliBina) AS İlceToplamHasarliBina,SUM(ToplamBina) AS İlceToplamBina,
-(SUM(ToplamHasarliBina)*1.0/SUM(ToplamBina))*100 AS İlceHasarOrani
+SELECT ilce_adi,SUM(ToplamHasarliBina) AS Ä°lceToplamHasarliBina,SUM(ToplamBina) AS Ä°lceToplamBina,
+(SUM(ToplamHasarliBina)*1.0/SUM(ToplamBina))*100 AS Ä°lceHasarOrani
 FROM BinaOranlari
 GROUP BY ilce_adi
-ORDER BY İlceHasarOrani DESC --En çok hasar alan ilçeler
-							 --olası bir deprem senaryosunda en çok hasar alacak ilk 5 ilçe:
-							 --BAKIRKÖY %78 oranla hasarlı
-							 --ADALAR %76 oranla hasarlı
-							 --BAHÇELİEVLER %75 oranla hasarlı
-							 --ZEYTİNBURNU %72 oranla hasarlı
-							 --GÜNGÖREN %72 oranla hasarlı
+ORDER BY Ä°lceHasarOrani DESC --En Ã§ok hasar alan ilÃ§eler
+							 
+							 --OlasÄ± bir deprem senaryosunda en Ã§ok hasar alacak ilk 5 ilÃ§e:
+							 --BAKIRKÃ–Y 	%78 oranla hasarlÄ±
+							 --ADALAR 	%76 oranla hasarlÄ±
+							 --BAHÃ‡ELÄ°EVLER %75 oranla hasarlÄ±
+							 --ZEYTÄ°NBURNU 	%72 oranla hasarlÄ±
+							 --GÃœNGÃ–REN 	%72 oranla hasarlÄ±
 
 
 
 
------- Binaların yaşları binaların alacağı hasarı ne kadar etkiliyor?
+------ BinalarÄ±n yaÅŸlarÄ± binalarÄ±n alacaÄŸÄ± hasarÄ± ne kadar etkiliyor?
 
---1) 1980den eski binaların çoğunluk olduğu ilçe ve mahallelerde hasar oranları nasıl?
+--1) 1980den eski binalarÄ±n Ã§oÄŸunluk olduÄŸu ilÃ§e ve mahallelerde hasar oranlarÄ± nasÄ±l?
 --CTE;
 WITH BinaOranlari (ilce_adi,mahalle_adi,ToplamHasarliBina,ToplamBina,HasarliBinaOrani,_1980OncesiOrani)
 AS
@@ -174,14 +176,14 @@ ON d.mahalle_koy_uavt = b.mahalle_uavt
 SELECT ilce_adi,mahalle_adi,ToplamHasarliBina,ToplamBina, HasarliBinaOrani,_1980OncesiOrani
 FROM BinaOranlari
 ORDER BY _1980OncesiOrani DESC
-							   -- Eski binaların çoğunlukta olması alınacak hasarı kesin bir şekilde artırır
-							   -- demek doğru olmayabilir. Örneğin BEYOĞLU - ÇUKUR bölgesindeki binaların
-							   -- %84ü 1980 öncesinden kalma olmasına rağmen %35 hasar oranına sahip,
-							   -- tam tersi olarak 1980 öncesinden kalma yapılandırma bulundurmamasına rağmen
-							   -- %70lerde bile hasar oranı olan bölgeler bulunmakta.
+							   -- Eski binalarÄ±n Ã§oÄŸunlukta olmasÄ± alÄ±nacak hasarÄ± kesin bir ÅŸekilde artÄ±rÄ±r
+							   -- demek doÄŸru olmayabilir. Ã–rneÄŸin BEYOÄLU - Ã‡UKUR bÃ¶lgesindeki binalarÄ±n
+							   -- %84Ã¼ 1980 Ã¶ncesinden kalma olmasÄ±na raÄŸmen %35 hasar oranÄ±na sahip,
+							   -- tam tersi olarak 1980 Ã¶ncesinden kalma yapÄ±landÄ±rma bulundurmamasÄ±na raÄŸmen
+							   -- %70lerde bile hasar oranÄ± olan bÃ¶lgeler bulunmakta.
 
 
---2) 2000 ve sonrasında yapılan binaların çoğunlukta olduğu bölgelerde durum nasıl?
+--2) 2000 ve sonrasÄ±nda yapÄ±lan binalarÄ±n Ã§oÄŸunlukta olduÄŸu bÃ¶lgelerde durum nasÄ±l?
 
 --CTE;
 WITH BinaOranlari (ilce_adi,mahalle_adi,ToplamHasarliBina,ToplamBina,HasarliBinaOrani,_1980OncesiOrani,_2000SonrasiOrani)
@@ -201,15 +203,15 @@ ON d.mahalle_koy_uavt = b.mahalle_uavt
 )
 SELECT ilce_adi, mahalle_adi, ToplamHasarliBina, ToplamBina, HasarliBinaOrani, _1980OncesiOrani, _2000SonrasiOrani
 FROM BinaOranlari
-ORDER BY _2000SonrasiOrani DESC		-- Daha yeni binaların çoğunlukta olduğu bölgelerde net bir şekilde hasarın 
-									-- az olduğunu söylemek doğru değil, benzer şekilde farklı örnekler bulunmakta.
+ORDER BY _2000SonrasiOrani DESC						-- Daha yeni binalarÄ±n Ã§oÄŸunlukta olduÄŸu bÃ¶lgelerde net bir ÅŸekilde hasarÄ±n 
+									-- az olduÄŸunu sÃ¶ylemek doÄŸru deÄŸil, benzer ÅŸekilde farklÄ± Ã¶rnekler bulunmakta.
 
 
 
 
 
--- Tam olarak karşılaştırma yapabilmek için hasarın türü de önemli, aynı eski-yeni oranlarını binalardaki hasarın şiddeti ile karşılaştırmak gerekli
--- Eski binalar için
+-- Tam olarak karÅŸÄ±laÅŸtÄ±rma yapabilmek iÃ§in hasarÄ±n tÃ¼rÃ¼ de Ã¶nemli, aynÄ± eski-yeni oranlarÄ±nÄ± binalardaki hasarÄ±n ÅŸiddeti ile karÅŸÄ±laÅŸtÄ±rmak gerekli
+-- Eski binalar iÃ§in
 --CTE;
 WITH BinaOranlari (ilce_adi,mahalle_adi,ToplamHasarliBina,ToplamBina,CokHasarliBinaOrani,AgirHasarliBinaOrani,OrtaHasarliBinaOrani,HafifHasarliBinaOrani,HasarliBinaOrani,_1980OncesiOrani,_2000SonrasiOrani)
 AS
@@ -237,31 +239,31 @@ OrtaHasarliBinaOrani,HafifHasarliBinaOrani,HasarliBinaOrani,_1980OncesiOrani,_20
 FROM BinaOranlari
 --ORDER BY _1980OncesiOrani DESC  
 ORDER BY _2000SonrasiOrani DESC	
-								-- Eski binaların çoğunluk olduğu yerlerde Çok Ağır hasarlı bina oranları genelde daha yüksekken,
-								-- yeni binaların çoğunluk olduğu yerlerde Hafif hasarlı bina oranları genelde daha yüksek.
-								-- Bina yaşının alınacak hasarın şiddetine etkisi olduğu söylenebilir,
-								-- fakat aykırı örneklerin de mevcut olmasının da etkisiyle, binanın yaşı haricinde, 
-								-- elimizde bulunmayan bir çok farklı değişken
-								-- alınacak hasarın belirlenmesinde etkili denebilir. (binanın temeli, kullanılan materyallerin türü ve kalitesi vs.)
+								-- Eski binalarÄ±n Ã§oÄŸunluk olduÄŸu yerlerde Ã‡ok AÄŸÄ±r hasarlÄ± bina oranlarÄ± genelde daha yÃ¼ksekken,
+								-- yeni binalarÄ±n Ã§oÄŸunluk olduÄŸu yerlerde Hafif hasarlÄ± bina oranlarÄ± genelde daha yÃ¼ksek.
+								-- Bina yaÅŸÄ±nÄ±n alÄ±nacak hasarÄ±n ÅŸiddetine etkisi olduÄŸu sÃ¶ylenebilir,
+								-- fakat aykÄ±rÄ± Ã¶rneklerin de mevcut olmasÄ±nÄ±n da etkisiyle, binanÄ±n yaÅŸÄ± haricinde, 
+								-- elimizde bulunmayan bir Ã§ok farklÄ± deÄŸiÅŸken
+								-- alÄ±nacak hasarÄ±n belirlenmesinde etkili denebilir. (binanÄ±n temeli, kullanÄ±lan materyallerin tÃ¼rÃ¼ ve kalitesi vs.)
 
 
-								-- En eski binalarına sahip ilçe ve mahalleler ilk beş;
-								-- FATİH - YEDİKULE
-								-- FATİH - SARIDEMİR
-								-- FATİH - YAVUZ SİNAN 
-								-- FATİH - KOCA MUSTAFAPAŞA
-								-- BEYOĞLU - ÇUKUR
+								-- En eski binalarÄ±na sahip ilÃ§e ve mahalleler ilk beÅŸ;
+								-- FATÄ°H - YEDÄ°KULE
+								-- FATÄ°H - SARIDEMÄ°R
+								-- FATÄ°H - YAVUZ SÄ°NAN 
+								-- FATÄ°H - KOCA MUSTAFAPAÅA
+								-- BEYOÄLU - Ã‡UKUR
 
-								-- En yeni binalara sahip ilçe ve mahalleler ilk beş;
-								-- ÇEKMEKÖY - NİŞANTEPE
-								-- SİLİVRİ - KAVAKLI
-								-- SİLİVRİ - HÜRRİYET
-								-- ŞİLE - DOĞANCILI
+								-- En yeni binalara sahip ilÃ§e ve mahalleler ilk beÅŸ;
+								-- Ã‡EKMEKÃ–Y - NÄ°ÅANTEPE
+								-- SÄ°LÄ°VRÄ° - KAVAKLI
+								-- SÄ°LÄ°VRÄ° - HÃœRRÄ°YET
+								-- ÅÄ°LE - DOÄANCILI
 								-- TUZLA - AKFIRAT
 
 
------- Binaların çok katlı olması alınan hasarı etkiliyor mu?
--- 9-19 katlı binaların olduğu bölgelerde hasar çok mu az mı?
+------ BinalarÄ±n Ã§ok katlÄ± olmasÄ± alÄ±nan hasarÄ± etkiliyor mu?
+-- 9-19 katlÄ± binalarÄ±n olduÄŸu bÃ¶lgelerde hasar Ã§ok mu az mÄ±?
 --CTE;
 WITH BinaOranlari (ilce_adi,mahalle_adi,ToplamHasarliBina,ToplamBina,HasarliBinaOrani,_9_19_kat_arasi)
 AS
@@ -279,59 +281,61 @@ ON d.mahalle_koy_uavt = b.mahalle_uavt
 )
 SELECT *
 FROM BinaOranlari
-WHERE _9_19_kat_arasi > 0		-- çoğu bölgede 9 - 19 kat arası bina yok, sadece olan bölgelere bakılıyor
+WHERE _9_19_kat_arasi > 0	-- Ã§oÄŸu bÃ¶lgede 9 - 19 kat arasÄ± bina yok, sadece olan bÃ¶lgelere bakÄ±lÄ±yor
 --ORDER BY HasarliBinaOrani DESC
 ORDER BY _9_19_kat_arasi DESC
 
-									-- Yine aykırı gözlemler bulunmakla beraber,
-									-- hasarlı bina oranı yüksek bölgelerde, fazla sayıda çok katlı bina olmadığı söylenebilir,
-									-- bu durum çok katlı binaların daha yeni teknolojik yöntemlerle/araçlarla yapılıp
-									-- daha dayanıklı olmalarına bağlanabilir.
+									-- Yine aykÄ±rÄ± gÃ¶zlemler bulunmakla beraber,
+									-- hasarlÄ± bina oranÄ± yÃ¼ksek bÃ¶lgelerde, fazla sayÄ±da Ã§ok katlÄ± bina olmadÄ±ÄŸÄ± sÃ¶ylenebilir,
+									-- bu durum Ã§ok katlÄ± binalarÄ±n daha yeni teknolojik yÃ¶ntemlerle/araÃ§larla yapÄ±lmalarÄ± gerekliliÄŸine
+									-- ve daha dayanÄ±klÄ± olmalarÄ±na baÄŸlanabilir.
 
 
 
 
----- Binaların yaşları ile deprem durumlarında yaşanan tesisat sorunlarının bir ilişkisi var mı?
+---- BinalarÄ±n yaÅŸlarÄ± ile deprem durumlarÄ±nda yaÅŸanan tesisat sorunlarÄ±nÄ±n bir iliÅŸkisi var mÄ±?
 SELECT d.ilce_adi,
-SUM(dogalgaz_boru_hasari) AS İlceTopHasarliDogalgaz,
-SUM(icme_suyu_boru_hasari) AS İlceTopHasarliİcmeSuyu,
-SUM(atik_su_boru_hasari) AS İlceTopHasarliAtikSuyu,
-SUM(_1980_oncesi) AS İlceTop1980,
-SUM(_1980_2000_arasi) AS İlceTop1980_2000,
-SUM(_2000_sonrasi) AS İlceTop2000,
-SUM(dogalgaz_boru_hasari+icme_suyu_boru_hasari+atik_su_boru_hasari) AS İlceTopTesisatHasari
+SUM(dogalgaz_boru_hasari) AS Ä°lceTopHasarliDogalgaz,
+SUM(icme_suyu_boru_hasari) AS Ä°lceTopHasarliÄ°cmeSuyu,
+SUM(atik_su_boru_hasari) AS Ä°lceTopHasarliAtikSuyu,
+SUM(_1980_oncesi) AS Ä°lceTop1980,
+SUM(_1980_2000_arasi) AS Ä°lceTop1980_2000,
+SUM(_2000_sonrasi) AS Ä°lceTop2000,
+SUM(dogalgaz_boru_hasari+icme_suyu_boru_hasari+atik_su_boru_hasari) AS Ä°lceTopTesisatHasari
 FROM ibb.dbo.deprem d
 LEFT JOIN ibb.dbo.bina b 
 ON d.mahalle_koy_uavt = b.mahalle_uavt
 GROUP BY d.ilce_adi
-ORDER BY İlceTop1980 DESC -- Eski binaların olduğu bölgelerdeki toplam hasarlı tesisat; 72, 20, 25, 27, 32...
---ORDER BY İlceTop2000 DESC	-- Yeni binaların olduğu bölgelerdeki toplam hasarlı tesisat; 86, 40, 64, 25, 115...
---ORDER BY İlceTop1980_2000 DESC -- Yeni binaların çoğunlukta olduğu bazı bölgelerde, 1980-2000 arası binalar da çoğunlukta
-								-- ve bu durum karışıklık yaratıyor. 
+ORDER BY Ä°lceTop1980 DESC 		-- Eski binalarÄ±n olduÄŸu bÃ¶lgelerdeki toplam hasarlÄ± tesisat; 72, 20, 25, 27, 32...
+--ORDER BY Ä°lceTop2000 DESC		-- Yeni binalarÄ±n olduÄŸu bÃ¶lgelerdeki toplam hasarlÄ± tesisat; 86, 40, 64, 25, 115...
+--ORDER BY Ä°lceTop1980_2000 DESC -	- Yeni binalarÄ±n Ã§oÄŸunlukta olduÄŸu bazÄ± bÃ¶lgelerde, 1980-2000 arasÄ± binalar da Ã§oÄŸunlukta
+					-- ve bu durum karÄ±ÅŸÄ±klÄ±k yaratÄ±yor. 
 
-							-- Yeni binaların çoğunlukta olduğu ilçelerde tesisat sorunları daha fazla görünüyor 
-							-- olsa da sorunun yeni binalardan mı yoksa 1980-2000 arası binalardan mı kaynaklandığı
-							-- net ayırt edilemiyor.
+							-- Yeni binalarÄ±n Ã§oÄŸunlukta olduÄŸu ilÃ§elerde tesisat sorunlarÄ± daha fazla gÃ¶rÃ¼nÃ¼yor 
+							-- olsa da sorunun yeni binalardan mÄ± yoksa 1980-2000 arasÄ± binalardan mÄ± kaynaklandÄ±ÄŸÄ±
+							-- net ayÄ±rt edilemiyor.
 
+
+----Bunun iÃ§in, yeni bina sayÄ±sÄ±nÄ±n eski binalarÄ±n sayÄ±larÄ± toplamÄ±ndan kesinlikle fazla olduÄŸu bÃ¶lgelere bakÄ±lmalÄ±;
 SELECT d.ilce_adi,
-SUM(dogalgaz_boru_hasari) AS İlceTopHasarliDogalgaz,
-SUM(icme_suyu_boru_hasari) AS İlceTopHasarliİcmeSuyu,
-SUM(atik_su_boru_hasari) AS İlceTopHasarliAtikSuyu,
-SUM(_1980_oncesi) AS İlceTop1980,
-SUM(_1980_2000_arasi) AS İlceTop1980_2000,
-SUM(_2000_sonrasi) AS İlceTop2000,
-SUM(dogalgaz_boru_hasari+icme_suyu_boru_hasari+atik_su_boru_hasari) AS İlceTopTesisatHasari
+SUM(dogalgaz_boru_hasari) AS Ä°lceTopHasarliDogalgaz,
+SUM(icme_suyu_boru_hasari) AS Ä°lceTopHasarliÄ°cmeSuyu,
+SUM(atik_su_boru_hasari) AS Ä°lceTopHasarliAtikSuyu,
+SUM(_1980_oncesi) AS Ä°lceTop1980,
+SUM(_1980_2000_arasi) AS Ä°lceTop1980_2000,
+SUM(_2000_sonrasi) AS Ä°lceTop2000,
+SUM(dogalgaz_boru_hasari+icme_suyu_boru_hasari+atik_su_boru_hasari) AS Ä°lceTopTesisatHasari
 FROM ibb.dbo.deprem d
 LEFT JOIN ibb.dbo.bina b 
 ON d.mahalle_koy_uavt = b.mahalle_uavt
 GROUP BY d.ilce_adi
-HAVING (SUM(_2000_sonrasi)*1.0/SUM(_1980_2000_arasi + _1980_oncesi)) > 1 -- Eski binalar toplamının yeni bina sayısına eşit olmadığı, 
-																		 -- yeni bina sayısının daha fazla olduğu kısım ile sınırlandırma
+HAVING (SUM(_2000_sonrasi)*1.0/SUM(_1980_2000_arasi + _1980_oncesi)) > 1	-- Eski binalar toplamÄ±nÄ±n yeni bina sayÄ±sÄ±na eÅŸit olmadÄ±ÄŸÄ±, 
+										-- yeni bina sayÄ±sÄ±nÄ±n 1 kattan daha fazla olduÄŸu kÄ±sÄ±m ile sÄ±nÄ±rlandÄ±rma
 ORDER BY (SUM(_2000_sonrasi)*1.0/SUM(_1980_2000_arasi + _1980_oncesi)) DESC
-																		 -- Sıralama bu (yeni binalar/eski binalar toplamı) oranının gittikçe azaldığı sırada,
-																		 -- yani aşağı indikçe eski binalar toplamı yeni binalar toplamına yaklaşıyor.
-																		 -- (Yeni binalar/eski binalar toplamı) oranı azaldıkça da hasar artıyor.
-																		 -- Yine kesin bir yorum yapmak pek mümkün olmasa da yeni binaların çok hasarlı tesisata
-																		 -- sebep olmasının mümkün olmadığı, sorunun her bölgede en az yeni binalar kadar 
-																		 -- eski binaların da olmasından kaynaklandığı söylenebilir.
+																		 -- SÄ±ralama bu (yeni binalar/eski binalar toplamÄ±) oranÄ±nÄ±n gittikÃ§e azaldÄ±ÄŸÄ± sÄ±rada,
+																		 -- yani aÅŸaÄŸÄ± indikÃ§e eski binalar toplamÄ± yeni binalar toplamÄ±na yaklaÅŸÄ±yor.
+																		 -- (Yeni binalar/eski binalar toplamÄ±) oranÄ± azaldÄ±kÃ§a da hasar artÄ±yor.
+																		 -- Yani, yine kesin bir yorum yapmak pek mÃ¼mkÃ¼n olmasa da yeni binalarÄ±n Ã§ok hasarlÄ± tesisata
+																		 -- sebep olmasÄ±nÄ±n mÃ¼mkÃ¼n olmadÄ±ÄŸÄ±, sorunun her bÃ¶lgede en az yeni binalar kadar 
+																		 -- eski binalarÄ±n da olmasÄ±ndan kaynaklandÄ±ÄŸÄ± sÃ¶ylenebilir.
  
