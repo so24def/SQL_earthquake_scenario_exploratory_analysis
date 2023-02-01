@@ -244,7 +244,7 @@ ORDER BY _2000SonrasiOrani DESC
 								-- Bina yaşının alınacak hasarın şiddetine etkisi olduğu söylenebilir,
 								-- fakat aykırı örneklerin de mevcut olmasının da etkisiyle, binanın yaşı haricinde, 
 								-- elimizde bulunmayan bir çok farklı değişken
-								-- alınacak hasarın belirlenmesinde etkili denebilir. (binanın temeli, kullanılan materyallerin türü ve kalitesi vs.)
+								-- alınacak hasarın belirlenmesinde etkili denebilir. (binanın temeli, konumu,inşaatta kullanılan materyallerin türü ve kalitesi vs.)
 
 
 								-- En eski binalarına sahip ilçe ve mahalleler ilk beş;
